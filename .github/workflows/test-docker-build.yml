@@ -3,7 +3,7 @@ name: Conditional Build Docker Images
 on:
   push:
     branches:
-      - main
+      - master
     paths:
       - 'percona/**'
       - 'php/**'
@@ -12,7 +12,7 @@ on:
       - 'apache/**'
   pull_request:
     branches:
-      - main
+      - master
     paths:
       - 'percona/**'
       - 'php/**'

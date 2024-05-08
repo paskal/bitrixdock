@@ -26,9 +26,9 @@ jobs:
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - id: paths-changed
-        uses: dorny/paths-filter@v2
+        uses: dorny/paths-filter@v3
         with:
           filters: |
             percona:
@@ -73,8 +73,8 @@ jobs:
       fail-fast: false
       matrix: ${{fromJson(needs.filter-paths.outputs.matrix)}}
     steps:
-      - uses: actions/checkout@v2
-      - uses: docker/setup-buildx-action@v1
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
       - name: Build Docker image
         run: |
           docker build ./${{ matrix.directory }} -t ${{ matrix.directory }}:latest

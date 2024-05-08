@@ -108,4 +108,4 @@ jobs:
       - uses: docker/setup-buildx-action@v3
       - name: Build Docker image
         run: |
-          docker build ./${{ matrix.directory }} -t ${{ matrix.directory }}:latest
+          docker build ./${{ matrix.directory }} -t bitrixdock/${{ matrix.directory }}:latest

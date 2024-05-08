@@ -25,3 +25,5 @@ updates:
     directory: "/mysql"
     schedule:
       interval: "monthly"
+
+      

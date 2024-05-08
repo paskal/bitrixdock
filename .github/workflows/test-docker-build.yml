@@ -59,12 +59,11 @@ jobs:
         run: |
           matrix="{\"include\":["
           for dir in percona php81 php74 php80 php73 php56 php82 php71 php83 nginx mysql apache; do
-            output_name="${{ steps.paths-changed.outputs[$dir] }}"
-            if [[ "$output_name" == 'true' ]]; then
+            if [[ "${{ steps.paths-changed.outputs[$dir] }}" == 'true' ]]; then
               matrix+="{\"directory\":\"$dir\"},"
             fi
           done
-          matrix+="]}"
+          matrix="${matrix%?}]}"  # Remove the last comma and close the array
           echo "::set-output name=matrix::$matrix"
 
   build:

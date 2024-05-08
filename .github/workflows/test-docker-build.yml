@@ -59,7 +59,8 @@ jobs:
         run: |
           matrix="{\"include\":["
           for dir in percona php81 php74 php80 php73 php56 php82 php71 php83 nginx mysql apache; do
-            if [[ "${{ steps.paths-changed.outputs[dir] }}" == 'true' ]]; then
+            output_name="${{ steps.paths-changed.outputs[$dir] }}"
+            if [[ "$output_name" == 'true' ]]; then
               matrix+="{\"directory\":\"$dir\"},"
             fi
           done

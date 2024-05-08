@@ -7,3 +7,5 @@ USER root
 CMD ["mysqld"]
 
 EXPOSE 3306
+
+

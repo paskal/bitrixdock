@@ -1,0 +1,80 @@
+name: Conditional Build Docker Images
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'percona/**'
+      - 'php/**'
+      - 'nginx/**'
+      - 'mysql/**'
+      - 'apache/**'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'percona/**'
+      - 'php/**'
+      - 'nginx/**'
+      - 'mysql/**'
+      - 'apache/**'
+
+jobs:
+  filter-paths:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@v2
+      - id: paths-changed
+        uses: dorny/paths-filter@v2
+        with:
+          filters: |
+            percona:
+              - 'percona/**'
+            php81:
+              - 'php/php81/**'
+            php74:
+              - 'php/php74/**'
+            php80:
+              - 'php/php80/**'
+            php73:
+              - 'php/php73/**'
+            php56:
+              - 'php/php56/**'
+            php82:
+              - 'php/php82/**'
+            php71:
+              - 'php/php71/**'
+            php83:
+              - 'php/php83/**'
+            nginx:
+              - 'nginx/**'
+            mysql:
+              - 'mysql/**'
+            apache:
+              - 'apache/**'
+      - id: set-matrix
+        run: |
+          matrix="{\"include\":["
+          for dir in percona php81 php74 php80 php73 php56 php82 php71 php83 nginx mysql apache; do
+            if [[ "${{ steps.paths-changed.outputs[dir] }}" == 'true' ]]; then
+              matrix+="{\"directory\":\"$dir\"},"
+            fi
+          done
+          matrix+="]}"
+          echo "::set-output name=matrix::$matrix"
+
+  build:
+    needs: filter-paths
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix: ${{fromJson(needs.filter-paths.outputs.matrix)}}
+    steps:
+      - uses: actions/checkout@v2
+      - uses: docker/setup-buildx-action@v1
+      - name: Build Docker image
+        run: |
+          docker build ./${{ matrix.directory }} -t ${{ matrix.directory }}:latest

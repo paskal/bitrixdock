@@ -1,4 +1,4 @@
-FROM mysql:8.0
+FROM mysql:9.0
 
 MAINTAINER vitams
 
